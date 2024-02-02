@@ -16,24 +16,22 @@ The results page and suggestion pages are fully customisable.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **ISearchable** Make sure to implement the `ISearchable` class. The search page allows search on any model that has implemented this interface
+- **Search Bar Button** You can use ` SearchPage.SearchBarButton` as the trigger for the search page or directly implement the search page as is.
+- **Lazy Loading and Pagination**
+- *Direct async data fetch when searching*
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+- `dart pub add ruki_search`
+- Implement the ISearchable interface on your models
+- That's it follow the example for more.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+
 
 ```dart
 const like = 'sample';
 ```
 
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
