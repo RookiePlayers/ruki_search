@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 library ruki_search;
 
 import 'package:flutter/material.dart';
@@ -224,7 +226,7 @@ class SearchPage extends StatefulWidget {
   }
 
   SearchPage(
-      {Key? key,
+      {super.key,
       this.backgroundColor = Colors.white24,
       this.buttonColor = Colors.white24,
       this.iconColor,
@@ -258,8 +260,7 @@ class SearchPage extends StatefulWidget {
       this.lazyStartFromKey = "__start__",
       this.enableLazyLoading = false,
       required this.resultBuilder,
-      this.suggestionsBuilder})
-      : super(key: key) {
+      this.suggestionsBuilder}){
     if (enableLazyLoading) {
       assert(lazyRequest != null,
           "Lazy loading is enabled! Please use lazyRequest instead of request");
@@ -668,7 +669,7 @@ class _SearchDelegateState extends State<SearchDelegate> {
                 },
                 onSubmitted: onSearch,
                 style: widget.inputTextstyle ??
-                    Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 14),
+                    Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 14),
                 decoration: InputDecoration(
                   contentPadding: widget.padding,
                   filled: widget.inputBackgroundColor != null,
