@@ -11,8 +11,8 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-This Widget is a replacement of Flutter's SearchPageDelegate. It's improved upon it and allows multiple type of search, it has in-built fetch async operations and also pagniations for the result page.
-The results page and suggestion pages are fully customisable. 
+This Widget is a replacement for Flutter's SearchPageDelegate. It's improved upon it and allows multiple types of search, it has in-built fetch async operations and also paginations for the result page.
+The results page and suggestion pages are fully customizable. 
 
 ## Features
 
