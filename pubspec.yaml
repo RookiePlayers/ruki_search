@@ -1,6 +1,7 @@
 name: ruki_search
-description: "A configurable self-contained seacrh widget for flutter."
-version: 0.0.1
+description: "This Widget is a replacement of Flutter's SearchPageDelegate. It's improved upon it and allows multiple type of search, it has in-built fetch async operations and also pagniations for the result page.
+The results page and suggestion pages are fully customisable."
+version: 0.0.1-dev
 homepage: https://github.com/RookiePlayers/ruki_search
 repository: https://github.com/RookiePlayers/ruki_search
 
