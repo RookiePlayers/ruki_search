@@ -29,9 +29,44 @@ The results page and suggestion pages are fully customizable.
 
 ## Usage
 
+## API Reference
+
+### ISearchable
+
+|Name|Description|object-type
+|---------|-----------------|--------------|
+|searchId|The searched for item.|string
+|data|The serialized object-data| Map<string, dynamic>
+
 
 
 ```dart
-const like = 'sample';
+_buildSearchByPage() {
+    return SearchPage.searchBarButton(context, 
+    placeholder: "Search by name",
+    enableLazyLoading: false,
+    showExit: false,
+    request: (query) {
+      return Future.value([
+        Test(name: "Ruki"),
+        Test(name: "Ruki2"),
+        Test(name: "Ruki3"),
+        Test(name: "Ruki4"),
+        Test(name: "Ruki5"),
+        Test(name: "Ruki6")
+      ].where((element) => element.name.toLowerCase().contains(query.toLowerCase())).toList());
+    },
+    resultBuilder: (result) {
+      final modelData = result as Test;
+      return Container(
+        child: ListTile(
+          
+          title: Text(modelData.name),
+        ),
+      );
+    
+    }
+    );
+  }
 ```
 
