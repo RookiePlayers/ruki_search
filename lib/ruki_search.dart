@@ -514,6 +514,7 @@ class _SearchDelegateState extends State<SearchDelegate> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if(widget.showExit)
                     TextButton.icon(
                         style: TextButton.styleFrom(
                           splashFactory: NoSplash.splashFactory,
@@ -581,30 +582,28 @@ class _SearchDelegateState extends State<SearchDelegate> {
       searchedData = lazyLoadedSearchItems;
     }
     return Container(
-      padding: const EdgeInsets.only(top: 30),
-      child: Center(
+      child: Align(
+        alignment: Alignment.topCenter,
           child: searchedData.isNotEmpty
-              ? RefreshIndicator(
-                  onRefresh:
-                      widget.enableLazyLoading ? getNextResults : () async {},
-                  child: AnimationLimiter(
-                    child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: searchedData.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return AnimationConfiguration.staggeredList(
-                            position: index,
-                            duration: widget.resultsAnimationDuration ?? const Duration(milliseconds: 375),
-                            child: SlideAnimation(
-                                verticalOffset: widget.resultsAnimationOffset?.toDouble() ?? 50.0,
-                                child: FadeInAnimation(
-                                    child: widget
-                                        .resultBuilder(searchedData[index]))));
-                      },
-                      controller: scrollController,
-                    ),
-                  ), // Refresh entire list
-                )
+              ? AnimationLimiter(
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  physics: BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: searchedData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return AnimationConfiguration.staggeredList(
+                        position: index,
+                        duration: widget.resultsAnimationDuration ?? const Duration(milliseconds: 375),
+                        child: SlideAnimation(
+                            verticalOffset: widget.resultsAnimationOffset?.toDouble() ?? 50.0,
+                            child: FadeInAnimation(
+                                child: widget
+                                    .resultBuilder(searchedData[index]))));
+                  },
+                  controller: scrollController,
+                ),
+              )
               : widget.emptyScreen ??
                   Text(
                     "No Results Found",
@@ -675,7 +674,17 @@ class _SearchDelegateState extends State<SearchDelegate> {
                   filled: widget.inputBackgroundColor != null,
                   fillColor: widget.inputBackgroundColor,
                   isDense: true,
-                  prefixIcon: (widget.suggestions != null)
+                  prefixIcon: !widget.showExit ? IconButton(
+                    icon: Icon(
+                      widget.backIcon,
+                      color: widget.iconColor,
+                    ),
+                    onPressed: () {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                    },
+                  ) : (widget.suggestions != null)
                       ? IconButton(
                           icon: Icon(
                             widget.searchIcon,
@@ -703,7 +712,7 @@ class _SearchDelegateState extends State<SearchDelegate> {
                       ) ??
                       Theme.of(context)
                           .textTheme
-                          .bodyText1!
+                          .bodyLarge!
                           .copyWith(fontSize: 14),
                           
                   border: widget.inputBorder ?? OutlineInputBorder(
