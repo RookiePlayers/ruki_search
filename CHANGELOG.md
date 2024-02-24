@@ -25,6 +25,6 @@
 
 * Added resultPadding, and adjusted the default result padding
 
-## 0.0.5-dev
+## 0.0.6-dev
 
 * Pagination issue: current page doesn't reset when searching new input - Fixed
