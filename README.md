@@ -16,9 +16,7 @@ The results page and suggestion pages are fully customizable.
 - That's it follow the example for more.
 
 ## Images
-![alt Search Page](https://drive.google.com/uc?export=view&id=1uJKwf2yZzeFZD80QQRnmRad286zR9bBk)
-![alt Search Page](https://drive.google.com/uc?export=view&id=1s7fFc4nEokgm_93-azgIm5IzjqL24K6w)
-![alt Search Page](https://drive.google.com/uc?export=view&id=1VuBxwzzQWqgvqZThPM_KQtDGHNOj_5ff)
+![alt Search Page](https://drive.google.com/uc?export=view&id=1uJKwf2yZzeFZD80QQRnmRad286zR9bBk) ![alt Search Page](https://drive.google.com/uc?export=view&id=1s7fFc4nEokgm_93-azgIm5IzjqL24K6w) ![alt Search Page](https://drive.google.com/uc?export=view&id=1VuBxwzzQWqgvqZThPM_KQtDGHNOj_5ff)
 
 ## Usage
 
