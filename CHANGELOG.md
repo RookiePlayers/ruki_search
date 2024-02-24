@@ -9,3 +9,10 @@
 ## 0.0.2
 
 * Cleaned up code and added dartdoc with more detailed explanations
+
+## 0.0.3
+
+* Pagination Fixes: added paginationByPage, `lazyStartFromKey` is now `paginationCursor` as is dynamic. `lazyLoadLimitPerPage` is now `paginationLimit` added `paginationOffset` this is used when `paginateByPage = true`
+* Load more Button added for `enableLazyLoading = true`, scroll for more also added
+* Updated Example now shows full usage with lazyloading
+* minor UI tweaks: centered no results found. Added new params

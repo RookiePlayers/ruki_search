@@ -32,22 +32,28 @@ class SearchPage extends StatefulWidget {
           bool showExit = true,
           Duration? resultsAnimationDuration,
           num? resultsAnimationOffset,
-          Widget? backButton,
+          Widget? searchLeading,
+          Widget? searchTrailing,
           Widget? emptyScreen,
           Widget? resultScreen,
           Widget? errorScreen,
           Widget? loadingScreen,
           Widget? header,
           Widget? history,
-          String? lazyStartFromKey,
-          num? lazyLimitPerPage,
+          dynamic paginationCursor,
+          num? paginationLimit,
           bool enableLazyLoading = true,
+          bool enableLoadMoreScroll = true,
           bool liveSearch = true,
+          num? paginationOffset = 1,
+          bool paginateByPageNumber = false,
+          Widget? loadMoreWidget,
+          Widget? loadingWidget,
           Widget Function(ISearchable)? resultBuilder,
           Widget Function(ISearchable)? suggestionsBuilder,
           Future<List<ISearchable>> Function(String)? suggestions,
           Future<List<ISearchable>> Function(String)? request,
-          Future<List<ISearchable>> Function(String, String)? lazyRequest}) =>
+          Future<List<ISearchable>> Function(String, dynamic)? lazyRequest}) =>
       InkWell(
           onTap: () {
             SearchPage.showSearchPage(
@@ -70,22 +76,29 @@ class SearchPage extends StatefulWidget {
                 context: context,
                 initialQuery: initialQuery,
                 showExit: showExit,
-                backButton: backButton,
+                searchLeading: searchLeading,
+                searchTrailing: searchTrailing,
                 emptyScreen: emptyScreen,
                 resultScreen: resultScreen,
                 errorScreen: errorScreen,
                 loadingScreen: loadingScreen,
                 header: header,
                 history: history,
-                lazyStartFromKey: lazyStartFromKey,
-                lazyLimitPerPage: lazyLimitPerPage,
+                paginationCursor: paginationCursor,
+                paginationLimit: paginationLimit,
+                enableLoadMoreScroll: enableLoadMoreScroll,
                 enableLazyLoading: enableLazyLoading,
                 liveSearch: liveSearch,
                 resultBuilder: resultBuilder ?? (s) => Container(),
                 suggestionsBuilder: suggestionsBuilder,
                 suggestions: suggestions,
                 request: request,
-                lazyRequest: lazyRequest);
+                paginationOffset: paginationOffset,
+                paginateByPageNumber: paginateByPageNumber,
+                lazyRequest: lazyRequest,
+                loadMoreWidget: loadMoreWidget,
+                loadingWidget: loadingWidget
+                );
           },
           child: Container(
             constraints:
@@ -170,23 +183,29 @@ class SearchPage extends StatefulWidget {
       String? query = '',
       bool useRootNavigator = false,
       bool liveSearch = true,
-      String initialQuery = "__start__",
+      String initialQuery = "",
       bool showExit = true,
-      Widget? backButton,
+      Widget? searchLeading,
+      Widget? searchTrailing,
       Widget? emptyScreen,
       Widget? resultScreen,
       Widget? errorScreen,
       Widget? loadingScreen,
       Widget? header,
       Widget? history,
-      String? lazyStartFromKey,
-      num? lazyLimitPerPage,
+      dynamic paginationCursor,
+      num? paginationLimit,
       bool enableLazyLoading = false,
+      bool enableLoadMoreScroll = false,
+      bool paginateByPageNumber = false,
+      num? paginationOffset = 1,
+      Widget? loadMoreWidget,
+      Widget? loadingWidget,
       required Widget Function(ISearchable) resultBuilder,
       Widget Function(ISearchable)? suggestionsBuilder,
       Future<List<ISearchable>> Function(String)? suggestions,
       Future<List<ISearchable>> Function(String)? request,
-      Future<List<ISearchable>> Function(String, String)? lazyRequest}) {
+      Future<List<ISearchable>> Function(String, dynamic)? lazyRequest}) {
     return Navigator.of(context, rootNavigator: useRootNavigator)
         .push(createRoute(
       SearchPage(
@@ -209,20 +228,27 @@ class SearchPage extends StatefulWidget {
         initialQuery: query ?? "",
         showExit: showExit,
         liveSearch: liveSearch,
-        backButton: backButton,
+        searchLeading: searchLeading,
+        searchTrailing: searchTrailing,
         emptyScreen: emptyScreen,
         resultScreen: resultScreen,
         errorScreen: errorScreen,
         loadingScreen: loadingScreen,
         header: header,
         history: history,
-        lazyStartFromKey: lazyStartFromKey,
+        paginationCursor: paginationCursor,
+        enableLoadMoreScroll: enableLoadMoreScroll,
         enableLazyLoading: enableLazyLoading,
         resultBuilder: resultBuilder,
         suggestionsBuilder: suggestionsBuilder,
         suggestions: suggestions,
         request: request,
         lazyRequest: lazyRequest,
+        paginateByPageNumber: paginateByPageNumber,
+        paginationOffset: paginationOffset,
+        paginationLimit: paginationLimit,
+        loadMoreWidget: loadMoreWidget,
+        loadingWidget: loadingWidget,
       ),
     ));
   }
@@ -248,7 +274,8 @@ class SearchPage extends StatefulWidget {
       this.initialQuery = "",
       this.showExit = true,
       this.liveSearch = true,
-      this.backButton,
+      this.searchLeading,
+      this.searchTrailing,
       this.emptyScreen,
       this.resultScreen,
       this.errorScreen,
@@ -258,9 +285,14 @@ class SearchPage extends StatefulWidget {
       this.request,
       this.lazyRequest,
       this.suggestions,
-      this.lazyLimitPerPage = 30,
-      this.lazyStartFromKey = "__start__",
+      this.paginationLimit = 30,
+      this.paginationCursor = 1,
+      this.paginationOffset = 1,
+      this.paginateByPageNumber = false,
       this.enableLazyLoading = false,
+      this.enableLoadMoreScroll = false,
+      this.loadMoreWidget,
+      this.loadingWidget,
       required this.resultBuilder,
       this.suggestionsBuilder}) {
     if (enableLazyLoading) {
@@ -291,23 +323,29 @@ class SearchPage extends StatefulWidget {
   final Border border;
   final String initialQuery;
   final bool showExit;
-  final Widget? backButton;
+  final Widget? searchLeading;
+  final Widget? searchTrailing;
   final Widget? emptyScreen;
   final Widget? resultScreen;
   final Widget? errorScreen;
   final Widget? loadingScreen;
   final Widget? header;
   final Widget? history;
-  final String? lazyStartFromKey;
-  final num? lazyLimitPerPage;
+  final dynamic paginationCursor;
+  final num? paginationLimit;
   final bool enableLazyLoading;
+  final bool enableLoadMoreScroll;
   final bool liveSearch;
+  final bool paginateByPageNumber;
+  final num? paginationOffset;
+  final Widget? loadMoreWidget;
+  final Widget? loadingWidget;
   final Widget Function(ISearchable) resultBuilder;
   final Widget Function(ISearchable)? suggestionsBuilder;
   final Future<List<ISearchable>> Function(String)? suggestions;
   Future<List<ISearchable>> Function(String)? request;
-  Future<List<ISearchable>> Function(String, String)?
-      lazyRequest; //param = query, param 2 = key
+  Future<List<ISearchable>> Function(String, dynamic)?
+      lazyRequest; //param = query, param 2 = offset
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -340,20 +378,27 @@ class _SearchPageState extends State<SearchPage> {
           initialQuery: widget.initialQuery,
           liveSearch: widget.liveSearch,
           showExit: widget.showExit,
-          backButton: widget.backButton,
+          searchLeading: widget.searchLeading,
+          searchTrailing: widget.searchTrailing,
           emptyScreen: widget.emptyScreen,
           resultScreen: widget.resultScreen,
           errorScreen: widget.errorScreen,
           loadingScreen: widget.loadingScreen,
           header: widget.header,
           history: widget.history,
-          lazyStartFromKey: widget.lazyStartFromKey,
+          paginationCursor: widget.paginationCursor,
           enableLazyLoading: widget.enableLazyLoading,
+          enableLoadMoreScroll: widget.enableLoadMoreScroll,
           resultBuilder: widget.resultBuilder,
           suggestionsBuilder: widget.suggestionsBuilder,
           suggestions: widget.suggestions,
           request: widget.request,
           lazyRequest: widget.lazyRequest,
+          paginationOffset: widget.paginationOffset,
+          paginateByPageNumber: widget.paginateByPageNumber,
+          paginationLimit: widget.paginationLimit,
+          loadMoreWidget: widget.loadMoreWidget,
+          loadingWidget: widget.loadingWidget,
         )));
   }
 }
@@ -362,7 +407,7 @@ class SearchDelegate extends StatefulWidget {
   const SearchDelegate(
       {super.key,
       this.backgroundColor = Colors.white,
-      this.buttonColor = Colors.white24,
+      this.buttonColor,
       this.iconColor,
       this.searchIcon = LineIcons.search,
       this.closeIcon = LineIcons.times,
@@ -380,7 +425,8 @@ class SearchDelegate extends StatefulWidget {
       this.initialQuery = "",
       this.showExit = true,
       this.liveSearch = true,
-      this.backButton,
+      this.searchLeading,
+      this.searchTrailing,
       this.emptyScreen,
       this.resultScreen,
       this.errorScreen,
@@ -390,14 +436,19 @@ class SearchDelegate extends StatefulWidget {
       this.request,
       this.lazyRequest,
       this.suggestions,
-      this.lazyLimitPerPage = 30,
-      this.lazyStartFromKey = "__start__",
+      this.paginationLimit = 30,
+      this.paginationCursor = 1,
+      this.paginateByPageNumber = false,
+      this.paginationOffset = 1,
       this.enableLazyLoading = false,
+      this.enableLoadMoreScroll = false,
+      this.loadMoreWidget,
+      this.loadingWidget,
       required this.resultBuilder,
       this.suggestionsBuilder});
 
   final Color backgroundColor;
-  final Color buttonColor;
+  final Color? buttonColor;
   final Color? iconColor;
   final IconData searchIcon;
   final IconData closeIcon;
@@ -414,22 +465,28 @@ class SearchDelegate extends StatefulWidget {
   final Border border;
   final String initialQuery;
   final bool showExit;
-  final Widget? backButton;
+  final Widget? searchLeading;
+  final Widget? searchTrailing;
   final Widget? emptyScreen;
   final Widget? resultScreen;
   final Widget? errorScreen;
   final Widget? loadingScreen;
   final Widget? header;
   final Widget? history;
-  final String? lazyStartFromKey;
-  final num? lazyLimitPerPage;
+  final dynamic paginationCursor;
+  final num? paginationLimit;
+  final num? paginationOffset;
+  final bool paginateByPageNumber;
   final bool enableLazyLoading;
+  final bool enableLoadMoreScroll;
   final bool liveSearch;
+  final Widget? loadMoreWidget;
+  final Widget? loadingWidget;
   final Widget Function(ISearchable) resultBuilder;
   final Widget Function(ISearchable)? suggestionsBuilder;
   final Future<List<ISearchable>> Function(String)? suggestions;
   final Future<List<ISearchable>> Function(String)? request;
-  final Future<List<ISearchable>> Function(String, String)? lazyRequest;
+  final Future<List<ISearchable>> Function(String, dynamic)? lazyRequest;
 
   @override
   State<SearchDelegate> createState() => _SearchDelegateState();
@@ -439,16 +496,19 @@ class _SearchDelegateState extends State<SearchDelegate> {
   _SearchPage _currentPage = _SearchPage.results;
   late SearchController searchController;
   final TextEditingController _queryController = TextEditingController();
-  String? lazyPreviousKey;
+  dynamic paginationNextCursor;
   ScrollController scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
   List<ISearchable> lazyLoadedSearchItems = [];
+  late num paginationOffset;
+  bool loading = false;
 
   @override
   void initState() {
+    paginationOffset = widget.paginationOffset ?? 1;
     super.initState();
 
-    if (widget.enableLazyLoading) {
+    if (widget.enableLazyLoading && widget.enableLoadMoreScroll) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         getCurrentResults();
         scrollController.addListener(_scrollListener);
@@ -459,10 +519,10 @@ class _SearchDelegateState extends State<SearchDelegate> {
 
   _scrollListener() {
     _focusNode.unfocus();
-    if (scrollController.position.atEdge) {
-      if (scrollController.position.pixels >= 0) {
-        getNextResults();
-      }
+    //if at max scroll extent load more data
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      getNextResults();
     }
   }
 
@@ -480,6 +540,11 @@ class _SearchDelegateState extends State<SearchDelegate> {
       case _SearchPage.results:
         body = Consumer<SearchController>(builder: ((context, value, c) {
           late Widget child;
+          if (value.states != SearchStates.error &&
+              value.searchedData.isEmpty &&
+              widget.enableLazyLoading) {
+            return _buildResult(value.searchedData);
+          }
           switch (value.states) {
             case SearchStates.loading:
               child = widget.loadingScreen ?? _buildLoading();
@@ -590,8 +655,44 @@ class _SearchDelegateState extends State<SearchDelegate> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: searchedData.length,
+                  itemCount:
+                      searchedData.length + (widget.enableLazyLoading ? 1 : 0),
                   itemBuilder: (BuildContext context, int index) {
+                    if (index == searchedData.length &&
+                        widget.enableLazyLoading) {
+                      return widget.loadMoreWidget != null
+                          ? (loading ? (widget.loadingWidget ??
+                              const Center(
+                              child: CircularProgressIndicator(),
+                            )) : widget.loadMoreWidget)
+                          : 
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: OutlinedButton(
+                                  onPressed: () {
+                                    getNextResults();
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                      elevation: 0,
+                                      backgroundColor: widget.buttonColor,
+                                      fixedSize: const Size(200, 30),
+                                      side: BorderSide(
+                                          color: widget.buttonColor ??
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                          width: 1),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10))),
+                                  child: loading
+                                      ? const Center(child: SizedBox(height: 20, width:20, child: CircularProgressIndicator(strokeWidth: 2,)))
+                                      : const Text("Load More"),
+                                ),
+                              ),
+                            );
+                    }
                     return AnimationConfiguration.staggeredList(
                         position: index,
                         duration: widget.resultsAnimationDuration ??
@@ -607,11 +708,13 @@ class _SearchDelegateState extends State<SearchDelegate> {
                   controller: scrollController,
                 ),
               )
-            : widget.emptyScreen ??
-                Text(
-                  "No Results Found",
-                  style: widget.inputTextstyle,
-                ));
+            : Center(
+              child: widget.emptyScreen ??
+                  Text(
+                    "No Results Found",
+                    style: widget.inputTextstyle,
+                  ),
+            ));
   }
 
   Widget _buildLoading() {
@@ -624,7 +727,7 @@ class _SearchDelegateState extends State<SearchDelegate> {
     return Center(
         child: Text(
       "An error occured",
-      style: widget.inputTextstyle!.copyWith(color: Colors.red),
+      style: widget.inputTextstyle,
     ));
   }
 
@@ -680,7 +783,10 @@ class _SearchDelegateState extends State<SearchDelegate> {
                   fillColor: widget.inputBackgroundColor,
                   isDense: true,
                   prefixIcon: !widget.showExit
-                      ? IconButton(
+                      ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                        IconButton(
                           icon: Icon(
                             widget.backIcon,
                             color: widget.iconColor,
@@ -690,9 +796,11 @@ class _SearchDelegateState extends State<SearchDelegate> {
                               Navigator.pop(context);
                             }
                           },
-                        )
+                        ),
+                        widget.searchLeading ?? Container()
+                      ],)
                       : (widget.suggestions != null)
-                          ? IconButton(
+                          ? widget.searchLeading ?? IconButton(
                               icon: Icon(
                                 widget.searchIcon,
                                 color: widget.iconColor ??
@@ -706,7 +814,8 @@ class _SearchDelegateState extends State<SearchDelegate> {
                               widget.searchIcon,
                               color: widget.iconColor,
                             ),
-                  suffixIcon: IconButton(
+                  suffixIcon: widget.searchTrailing ?? 
+                  IconButton(
                       onPressed: () {
                         _queryController.clear();
                       },
@@ -735,7 +844,7 @@ class _SearchDelegateState extends State<SearchDelegate> {
 
   void onSearch(String v) async {
     searchController.networtResponse = widget.enableLazyLoading
-        ? widget.lazyRequest!(v, widget.lazyStartFromKey ?? "__start__")
+        ? widget.lazyRequest!(v, widget.paginationCursor ?? 1)
         : widget.request!(v);
     await searchController.searchSearchable();
     if (widget.enableLazyLoading) {
@@ -748,14 +857,22 @@ class _SearchDelegateState extends State<SearchDelegate> {
     lazyLoadedSearchItems.addAll(Set.from(searchController.searchedData));
     if (lazyLoadedSearchItems.isNotEmpty) {
       lazyLoadedSearchItems = lazyLoadedSearchItems.toSet().toList();
-      lazyPreviousKey = lazyLoadedSearchItems.last.searchId();
+      paginationOffset++;
+      paginationNextCursor = widget.paginateByPageNumber
+          ? paginationOffset
+          : lazyLoadedSearchItems.last.searchId();
     }
   }
 
   Future<void> getNextResults() async {
+    if (mounted) {
+      setState(() {
+        loading = true;
+      });
+    }
     searchController = Provider.of<SearchController>(context, listen: false);
     searchController.networtResponse =
-        widget.lazyRequest!(_queryController.text, lazyPreviousKey ?? "");
+        widget.lazyRequest!(_queryController.text, paginationNextCursor ?? "");
     await searchController.searchSearchable();
 
     if (searchController.searchedData.isNotEmpty) {
@@ -765,10 +882,15 @@ class _SearchDelegateState extends State<SearchDelegate> {
           lazyLoadedSearchItems.add(item);
         }
       }
-      lazyPreviousKey = lazyLoadedSearchItems.last.searchId();
+      paginationOffset++;
+      paginationNextCursor = widget.paginateByPageNumber
+          ? paginationOffset
+          : lazyLoadedSearchItems.last.searchId();
     }
     if (mounted) {
-      setState(() {});
+      setState(() {
+        loading = false;
+      });
     }
   }
 }
