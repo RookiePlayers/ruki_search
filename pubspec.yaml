@@ -1,7 +1,6 @@
 name: ruki_search
-description: "This Widget is a replacement of Flutter's SearchPageDelegate. It's improved upon it and allows multiple type of search, it has in-built fetch async operations and also pagniations for the result page.
-The results page and suggestion pages are fully customisable."
-version: 0.0.1-dev
+description: "This Widget allows multiple type of search, also lazy Loading for the result page."
+version: 0.0.2
 homepage: https://github.com/RookiePlayers/ruki_search
 repository: https://github.com/RookiePlayers/ruki_search
 

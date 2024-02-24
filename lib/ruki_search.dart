@@ -8,6 +8,8 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
+///SearchPage
+///A search page that can be used to search for data
 class SearchPage extends StatefulWidget {
   static Widget searchBarButton(BuildContext context,
           {Color backgroundColor = Colors.white,
@@ -61,7 +63,7 @@ class SearchPage extends StatefulWidget {
                 inputTextstyle: inputTextstyle,
                 resultsAnimationDuration: resultsAnimationDuration,
                 resultsAnimationOffset: resultsAnimationOffset,
-                inputBackgroundColor:inputBackgroundColor,
+                inputBackgroundColor: inputBackgroundColor,
                 inputBorder: inputBorder,
                 placeholder: placeholder,
                 border: border,
@@ -260,7 +262,7 @@ class SearchPage extends StatefulWidget {
       this.lazyStartFromKey = "__start__",
       this.enableLazyLoading = false,
       required this.resultBuilder,
-      this.suggestionsBuilder}){
+      this.suggestionsBuilder}) {
     if (enableLazyLoading) {
       assert(lazyRequest != null,
           "Lazy loading is enabled! Please use lazyRequest instead of request");
@@ -450,7 +452,7 @@ class _SearchDelegateState extends State<SearchDelegate> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         getCurrentResults();
         scrollController.addListener(_scrollListener);
-       // FocusScope.of(context).requestFocus(_focusNode);
+        // FocusScope.of(context).requestFocus(_focusNode);
       });
     }
   }
@@ -497,24 +499,24 @@ class _SearchDelegateState extends State<SearchDelegate> {
     }
     return Scaffold(
         backgroundColor: widget.backgroundColor,
-        body: Container(
-          child: Stack(
-            children: [ 
-              
-              Padding(padding: EdgeInsets.only(top: kToolbarHeight * 1.9), child: body),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.28,
-                transform: Matrix4.translationValues(0, -kToolbarHeight, 0),
-                width: MediaQuery.of(context).size.width,
-                child: widget.header ?? Container(),
-              ), 
-              Padding(
-                padding:  const EdgeInsets.only(
-              top: kToolbarHeight, left: 10, right: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if(widget.showExit)
+        body: Stack(
+          children: [
+            Padding(
+                padding: const EdgeInsets.only(top: kToolbarHeight * 1.9),
+                child: body),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.28,
+              transform: Matrix4.translationValues(0, -kToolbarHeight, 0),
+              width: MediaQuery.of(context).size.width,
+              child: widget.header ?? Container(),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: kToolbarHeight, left: 10, right: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (widget.showExit)
                     TextButton.icon(
                         style: TextButton.styleFrom(
                           splashFactory: NoSplash.splashFactory,
@@ -524,14 +526,13 @@ class _SearchDelegateState extends State<SearchDelegate> {
                             Navigator.pop(context);
                           }
                         },
-                        icon:  Icon(widget.backIcon),
+                        icon: Icon(widget.backIcon),
                         label: const Text("exit")),
-                    _buildSearchBar()
-                  ],
-                ),
+                  _buildSearchBar()
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ));
   }
 
@@ -581,22 +582,24 @@ class _SearchDelegateState extends State<SearchDelegate> {
     if (widget.enableLazyLoading) {
       searchedData = lazyLoadedSearchItems;
     }
-    return Container(
-      child: Align(
+    return Align(
         alignment: Alignment.topCenter,
-          child: searchedData.isNotEmpty
-              ? AnimationLimiter(
+        child: searchedData.isNotEmpty
+            ? AnimationLimiter(
                 child: ListView.builder(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  physics: BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: searchedData.length,
                   itemBuilder: (BuildContext context, int index) {
                     return AnimationConfiguration.staggeredList(
                         position: index,
-                        duration: widget.resultsAnimationDuration ?? const Duration(milliseconds: 375),
+                        duration: widget.resultsAnimationDuration ??
+                            const Duration(milliseconds: 375),
                         child: SlideAnimation(
-                            verticalOffset: widget.resultsAnimationOffset?.toDouble() ?? 50.0,
+                            verticalOffset:
+                                widget.resultsAnimationOffset?.toDouble() ??
+                                    50.0,
                             child: FadeInAnimation(
                                 child: widget
                                     .resultBuilder(searchedData[index]))));
@@ -604,12 +607,11 @@ class _SearchDelegateState extends State<SearchDelegate> {
                   controller: scrollController,
                 ),
               )
-              : widget.emptyScreen ??
-                  Text(
-                    "No Results Found",
-                    style: widget.inputTextstyle,
-                  )),
-    );
+            : widget.emptyScreen ??
+                Text(
+                  "No Results Found",
+                  style: widget.inputTextstyle,
+                ));
   }
 
   Widget _buildLoading() {
@@ -656,7 +658,7 @@ class _SearchDelegateState extends State<SearchDelegate> {
           child: Focus(
             focusNode: _focusNode,
             child: TextField(
-              autofocus: true,
+                autofocus: true,
                 controller: _queryController,
                 onEditingComplete: () {
                   handleSearch(_queryController.text.trim());
@@ -668,42 +670,48 @@ class _SearchDelegateState extends State<SearchDelegate> {
                 },
                 onSubmitted: onSearch,
                 style: widget.inputTextstyle ??
-                    Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 14),
+                    Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontSize: 14),
                 decoration: InputDecoration(
                   contentPadding: widget.padding,
                   filled: widget.inputBackgroundColor != null,
                   fillColor: widget.inputBackgroundColor,
                   isDense: true,
-                  prefixIcon: !widget.showExit ? IconButton(
-                    icon: Icon(
-                      widget.backIcon,
-                      color: widget.iconColor,
-                    ),
-                    onPressed: () {
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                      }
-                    },
-                  ) : (widget.suggestions != null)
+                  prefixIcon: !widget.showExit
                       ? IconButton(
                           icon: Icon(
-                            widget.searchIcon,
-                            color: widget.iconColor ?? widget.inputTextstyle?.color,
+                            widget.backIcon,
+                            color: widget.iconColor,
                           ),
                           onPressed: () {
-                            onSearch(_queryController.text.trim());
+                            if (Navigator.canPop(context)) {
+                              Navigator.pop(context);
+                            }
                           },
                         )
-                      : Icon(
-                          widget.searchIcon,
-                          color: widget.iconColor,
-                        ),
+                      : (widget.suggestions != null)
+                          ? IconButton(
+                              icon: Icon(
+                                widget.searchIcon,
+                                color: widget.iconColor ??
+                                    widget.inputTextstyle?.color,
+                              ),
+                              onPressed: () {
+                                onSearch(_queryController.text.trim());
+                              },
+                            )
+                          : Icon(
+                              widget.searchIcon,
+                              color: widget.iconColor,
+                            ),
                   suffixIcon: IconButton(
                       onPressed: () {
                         _queryController.clear();
                       },
                       icon: Icon(
-                       widget.closeIcon,
+                        widget.closeIcon,
                         color: widget.iconColor,
                       )),
                   hintText: (widget.placeholder),
@@ -714,10 +722,10 @@ class _SearchDelegateState extends State<SearchDelegate> {
                           .textTheme
                           .bodyLarge!
                           .copyWith(fontSize: 14),
-                          
-                  border: widget.inputBorder ?? OutlineInputBorder(
-                      borderRadius: widget.borderRadius,
-                      borderSide: widget.border.bottom),
+                  border: widget.inputBorder ??
+                      OutlineInputBorder(
+                          borderRadius: widget.borderRadius,
+                          borderSide: widget.border.bottom),
                 )),
           ),
         ),
@@ -749,30 +757,89 @@ class _SearchDelegateState extends State<SearchDelegate> {
     searchController.networtResponse =
         widget.lazyRequest!(_queryController.text, lazyPreviousKey ?? "");
     await searchController.searchSearchable();
-  
+
     if (searchController.searchedData.isNotEmpty) {
       for (var item in searchController.searchedData) {
-        if(!lazyLoadedSearchItems.any((e) => e.searchId() == item.searchId())){
+        if (!lazyLoadedSearchItems
+            .any((e) => e.searchId() == item.searchId())) {
           lazyLoadedSearchItems.add(item);
         }
       }
       lazyPreviousKey = lazyLoadedSearchItems.last.searchId();
     }
-    if(mounted){
+    if (mounted) {
       setState(() {});
     }
-    
   }
 }
 
+///States of the search
+///[loading] when the search is loading
+///[error] when an error occurs
+///[empty] when the search returns no result
+///[success] when the search is successful
 enum SearchStates { loading, error, empty, success }
 
+///Class to make data searchable
+///To use this class, extend it and implement the abstract methods
+///[searchId] and [data]
+///[searchId] is a unique identifier for the data
+///[data] is the data to be searched
+///Example:
+///```dart
+///class User extends ISearchable {
+///  final String name;
+/// final String email;
+/// final String id;
+/// User({required this.name, required this.email, required this.id});
+/// @override
+/// String searchId() => id;
+/// @override
+/// Map<String,dynamic> data() => {"name": name, "email": email};
+/// }
+/// ```
+/// The above example will make the User class searchable
+/// The [searchId] is the unique identifier for the user
+/// The [data] is the user's name and email
+/// The [data] is what will be searched
+/// The [searchId] is used to identify the user
 abstract class ISearchable {
   String searchId();
-  Map<String,dynamic> data();
+  Map<String, dynamic> data();
 }
 
-//Class to retrieve data that is being searched;
+///Abstract class for the search controller
+///To use this class, extend it and implement the abstract methods
+///[searchedData] and [searchSearchable]
+///[searchedData] is the data to be searched
+///[searchSearchable] is the method to search the data
+///Example:
+///```dart
+///class SearchController extends ISearchableNotifier {
+///  List<ISearchable> _searchedResult = [];
+/// SearchStates _states = SearchStates.empty;
+/// @override
+/// Future<void> searchSearchable() async {
+///  _states = SearchStates.loading;
+/// try {
+/// _searchedResult = await fetchSearchable();
+/// if (_searchedResult.isEmpty) {
+/// _states = SearchStates.empty;
+/// } else {
+/// _states = SearchStates.success;
+/// }
+/// } catch (e) {
+/// _states = SearchStates.error;
+/// }
+/// notifyListeners();
+/// }
+/// @override
+/// List<ISearchable> get searchedData => _searchedResult;
+/// @override
+/// SearchStates get states => _states;
+/// }
+/// ```
+
 abstract class ISearchableNotifier with ChangeNotifier {
   List<ISearchable> get searchedData;
   Future<void> searchSearchable();
@@ -796,6 +863,7 @@ class SearchController extends ISearchableNotifier {
       super.notifyListeners();
     }
   }
+
   @override
   Future<void> searchSearchable() async {
     _states = SearchStates.loading;
