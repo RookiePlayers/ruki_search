@@ -15,6 +15,11 @@ The results page and suggestion pages are fully customizable.
 - Implement the ISearchable interface on your models
 - That's it follow the example for more.
 
+## Images
+![alt Search Page](https://drive.google.com/file/d/1uJKwf2yZzeFZD80QQRnmRad286zR9bBk/view)
+![alt Search Page](https://drive.google.com/file/d/1s7fFc4nEokgm_93-azgIm5IzjqL24K6w/view)
+![alt Search Page](https://drive.google.com/file/d/1VuBxwzzQWqgvqZThPM_KQtDGHNOj_5ff/view)
+
 ## Usage
 
 ```dart

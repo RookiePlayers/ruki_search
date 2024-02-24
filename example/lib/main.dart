@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
         enableLazyLoading: true,
         paginateByPageNumber: true,
         enableLoadMoreScroll: false,
-        liveSearch: false,
+        liveSearch: true,
         showExit: false, lazyRequest: (query, page) {
       return _httpPunkApi(offset: page, limit: 5);
     }, resultBuilder: (result) {
