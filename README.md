@@ -29,17 +29,6 @@ The results page and suggestion pages are fully customizable.
 
 ## Usage
 
-## API Reference
-
-### ISearchable
-
-|Name|Description|object-type
-|---------|-----------------|--------------|
-|searchId|The searched for item.|string
-|data|The serialized object-data| Map<string, dynamic>
-
-
-
 ```dart
 _buildSearchByPage() {
     return SearchPage.searchBarButton(context, 
@@ -69,4 +58,15 @@ _buildSearchByPage() {
     );
   }
 ```
+
+## API Reference
+
+### ISearchable
+
+|Name|Description|object-type
+|---------|-----------------|--------------|
+|searchId|The searched for item.|string
+|data|The serialized object-data| Map<string, dynamic>
+
+
 
