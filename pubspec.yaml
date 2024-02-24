@@ -1,6 +1,6 @@
 name: ruki_search
 description: "This Widget allows multiple type of search, also lazy Loading for the result page."
-version: 0.0.3
+version: 0.0.5-dev
 homepage: https://github.com/RookiePlayers/ruki_search
 repository: https://github.com/RookiePlayers/ruki_search
 

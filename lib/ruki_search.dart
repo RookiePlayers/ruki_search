@@ -22,6 +22,7 @@ class SearchPage extends StatefulWidget {
               const BorderRadius.all(Radius.circular(12)),
           EdgeInsets padding =
               const EdgeInsets.symmetric(vertical: 9, horizontal: 15),
+          EdgeInsets? resultPadding,
           TextStyle? textStyle,
           TextStyle? inputTextstyle,
           Color? inputBackgroundColor,
@@ -65,6 +66,7 @@ class SearchPage extends StatefulWidget {
                 iconColor: iconColor,
                 borderRadius: borderRadius,
                 padding: padding,
+                resultPadding: resultPadding,
                 textStyle: textStyle,
                 inputTextstyle: inputTextstyle,
                 resultsAnimationDuration: resultsAnimationDuration,
@@ -97,8 +99,7 @@ class SearchPage extends StatefulWidget {
                 paginateByPageNumber: paginateByPageNumber,
                 lazyRequest: lazyRequest,
                 loadMoreWidget: loadMoreWidget,
-                loadingWidget: loadingWidget
-                );
+                loadingWidget: loadingWidget);
           },
           child: Container(
             constraints:
@@ -172,6 +173,7 @@ class SearchPage extends StatefulWidget {
       BorderRadius borderRadius = const BorderRadius.all(Radius.circular(12)),
       EdgeInsets padding =
           const EdgeInsets.symmetric(vertical: 9, horizontal: 15),
+      EdgeInsets? resultPadding,
       TextStyle? textStyle,
       TextStyle? inputTextstyle,
       Duration? resultsAnimationDuration,
@@ -217,6 +219,7 @@ class SearchPage extends StatefulWidget {
         backIcon: backIcon,
         borderRadius: borderRadius,
         padding: padding,
+        resultPadding: resultPadding,
         textStyle: textStyle,
         inputTextstyle: inputTextstyle,
         resultsAnimationDuration: resultsAnimationDuration,
@@ -269,6 +272,7 @@ class SearchPage extends StatefulWidget {
       this.resultsAnimationOffset,
       this.inputBackgroundColor,
       this.inputBorder,
+      this.resultPadding,
       this.placeholder = "Search",
       this.border = const Border(),
       this.initialQuery = "",
@@ -313,6 +317,7 @@ class SearchPage extends StatefulWidget {
   final IconData backIcon;
   final BorderRadius borderRadius;
   final EdgeInsets padding;
+  final EdgeInsets? resultPadding;
   final TextStyle? textStyle;
   final TextStyle? inputTextstyle;
   final Duration? resultsAnimationDuration;
@@ -414,6 +419,7 @@ class SearchDelegate extends StatefulWidget {
       this.backIcon = LineIcons.chevronLeft,
       this.borderRadius = const BorderRadius.all(Radius.circular(12)),
       this.padding = const EdgeInsets.symmetric(vertical: 9, horizontal: 15),
+      this.resultPadding,
       this.textStyle,
       this.inputTextstyle,
       this.resultsAnimationDuration,
@@ -455,6 +461,7 @@ class SearchDelegate extends StatefulWidget {
   final IconData backIcon;
   final BorderRadius borderRadius;
   final EdgeInsets padding;
+  final EdgeInsets? resultPadding;
   final TextStyle? textStyle;
   final TextStyle? inputTextstyle;
   final Duration? resultsAnimationDuration;
@@ -567,7 +574,9 @@ class _SearchDelegateState extends State<SearchDelegate> {
         body: Stack(
           children: [
             Padding(
-                padding: const EdgeInsets.only(top: kToolbarHeight * 1.9),
+                padding: widget.resultPadding ??
+                    EdgeInsets.only(
+                        top: kToolbarHeight * (widget.showExit ? 2.6 : 1.8)),
                 child: body),
             Container(
               height: MediaQuery.of(context).size.height * 0.28,
@@ -661,12 +670,13 @@ class _SearchDelegateState extends State<SearchDelegate> {
                     if (index == searchedData.length &&
                         widget.enableLazyLoading) {
                       return widget.loadMoreWidget != null
-                          ? (loading ? (widget.loadingWidget ??
-                              const Center(
-                              child: CircularProgressIndicator(),
-                            )) : widget.loadMoreWidget)
-                          : 
-                          Padding(
+                          ? (loading
+                              ? (widget.loadingWidget ??
+                                  const Center(
+                                    child: CircularProgressIndicator(),
+                                  ))
+                              : widget.loadMoreWidget)
+                          : Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Center(
                                 child: OutlinedButton(
@@ -687,7 +697,13 @@ class _SearchDelegateState extends State<SearchDelegate> {
                                           borderRadius:
                                               BorderRadius.circular(10))),
                                   child: loading
-                                      ? const Center(child: SizedBox(height: 20, width:20, child: CircularProgressIndicator(strokeWidth: 2,)))
+                                      ? const Center(
+                                          child: SizedBox(
+                                              height: 20,
+                                              width: 20,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                              )))
                                       : const Text("Load More"),
                                 ),
                               ),
@@ -709,12 +725,12 @@ class _SearchDelegateState extends State<SearchDelegate> {
                 ),
               )
             : Center(
-              child: widget.emptyScreen ??
-                  Text(
-                    "No Results Found",
-                    style: widget.inputTextstyle,
-                  ),
-            ));
+                child: widget.emptyScreen ??
+                    Text(
+                      "No Results Found",
+                      style: widget.inputTextstyle,
+                    ),
+              ));
   }
 
   Widget _buildLoading() {
@@ -740,7 +756,16 @@ class _SearchDelegateState extends State<SearchDelegate> {
     );
   }
 
+  resetPaginationData() {
+    lazyLoadedSearchItems.clear();
+    paginationOffset = 1;
+    paginationNextCursor = widget.paginateByPageNumber
+        ? paginationOffset
+        : widget.paginationCursor;
+  }
+
   handleSearch(v) {
+    resetPaginationData();
     if (widget.suggestions == null) {
       onSearch(v.trim());
     } else {
@@ -784,45 +809,47 @@ class _SearchDelegateState extends State<SearchDelegate> {
                   isDense: true,
                   prefixIcon: !widget.showExit
                       ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                        IconButton(
-                          icon: Icon(
-                            widget.backIcon,
-                            color: widget.iconColor,
-                          ),
-                          onPressed: () {
-                            if (Navigator.canPop(context)) {
-                              Navigator.pop(context);
-                            }
-                          },
-                        ),
-                        widget.searchLeading ?? Container()
-                      ],)
-                      : (widget.suggestions != null)
-                          ? widget.searchLeading ?? IconButton(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
                               icon: Icon(
-                                widget.searchIcon,
-                                color: widget.iconColor ??
-                                    widget.inputTextstyle?.color,
+                                widget.backIcon,
+                                color: widget.iconColor,
                               ),
                               onPressed: () {
-                                onSearch(_queryController.text.trim());
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
                               },
-                            )
+                            ),
+                            widget.searchLeading ?? Container()
+                          ],
+                        )
+                      : (widget.suggestions != null)
+                          ? widget.searchLeading ??
+                              IconButton(
+                                icon: Icon(
+                                  widget.searchIcon,
+                                  color: widget.iconColor ??
+                                      widget.inputTextstyle?.color,
+                                ),
+                                onPressed: () {
+                                  onSearch(_queryController.text.trim());
+                                },
+                              )
                           : Icon(
                               widget.searchIcon,
                               color: widget.iconColor,
                             ),
-                  suffixIcon: widget.searchTrailing ?? 
-                  IconButton(
-                      onPressed: () {
-                        _queryController.clear();
-                      },
-                      icon: Icon(
-                        widget.closeIcon,
-                        color: widget.iconColor,
-                      )),
+                  suffixIcon: widget.searchTrailing ??
+                      IconButton(
+                          onPressed: () {
+                            _queryController.clear();
+                          },
+                          icon: Icon(
+                            widget.closeIcon,
+                            color: widget.iconColor,
+                          )),
                   hintText: (widget.placeholder),
                   hintStyle: widget.inputTextstyle?.copyWith(
                         color: widget.inputTextstyle?.color?.withOpacity(0.5),

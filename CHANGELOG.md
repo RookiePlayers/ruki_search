@@ -16,3 +16,15 @@
 * Load more Button added for `enableLazyLoading = true`, scroll for more also added
 * Updated Example now shows full usage with lazyloading
 * minor UI tweaks: centered no results found. Added new params
+
+## 0.0.4
+
+* Updated Docs
+
+## 0.0.5
+
+* Added resultPadding, and adjusted the default result padding
+
+## 0.0.5-dev
+
+* Pagination issue: current page doesn't reset when searching new input - Fixed
